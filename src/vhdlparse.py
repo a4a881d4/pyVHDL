@@ -52,22 +52,23 @@ def p_ports_list(p):
 				
 def p_ports(p) :
 	'''ports : generic
-	         | in
-	         | out'''
+	         | slave
+	         | master
+			 | interface'''
 	p[0] = p[1]
 		
 def p_generic(p) :
 	'''generic : GENERIC COLON LBRACKET port_list RBRACKET'''
 	p[0] = ( 'generic', p[4] )
 	
-def p_in(p) :
-	'''in : IN COLON LBRACKET port_list RBRACKET'''
-	p[0] = ( 'in', p[4] )
+def p_slave(p) :
+	'''slave : SLAVE COLON LBRACKET port_list RBRACKET'''
+	p[0] = ( 'slave', p[4] )
 
-def p_out(p) :
-	'''out : OUT COLON LBRACKET port_list RBRACKET'''
-	p[0] = ( 'out', p[4] )
-	
+def p_master(p) :
+	'''master : MASTER COLON LBRACKET port_list RBRACKET'''
+	p[0] = ( 'master', p[4] )
+
 def p_port_list(p):
 	'''port_list : port
 				 | port COMMA port_list'''
@@ -79,7 +80,8 @@ def p_port(p) :
 	
 def p_state(p) :
 	'''state : std_logic
-	         | natural'''
+	         | natural
+			 | bus_state'''
 	p[0] = p[1]
 	
 def p_std_logic(p) :
@@ -104,7 +106,11 @@ def p_natural(p) :
 	if len(p) == 5:
 		p[0]['init'] = int(p[3])
 		
-
+def p_bus_state(p) :
+	'''bus_state : BUS LPAREN ID RPAREN'''
+	p[0] = { 'type':'bus' }
+	p[0]['id'] = p[3]
+	
 def p_error(p):
 	print "error :"
 	
