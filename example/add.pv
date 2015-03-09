@@ -4,3 +4,9 @@ entity add {
 	in : [ clk : 1, rst : 1, D : 8 ],
 	out : [ Q : 8 ]
 }
+
+entity sub {
+	generic : [ width : natural(8) ],
+	in : [ clk : 1, rst : 1, D : 8 ],
+	out : [ Q : 8 ]
+}
