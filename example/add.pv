@@ -1,12 +1,24 @@
 # entity add
 entity add {
 	generic : [ width : natural(8) ],
+	in : [ clk : 1, rst : 1, D : 8 -> "00000000" ],
+	out : [ Q : 8 ],
+	interface : { master : [ A : inout, B : vin ], slave : [ C : vout ] }
+}
+
+bus inout {
+	generic : [ width : natural(8) ],
 	in : [ clk : 1, rst : 1, D : 8 ],
 	out : [ Q : 8 ]
 }
 
-entity sub {
+bus vout {
 	generic : [ width : natural(8) ],
-	in : [ clk : 1, rst : 1, D : 8 ],
+	in : [ clk : 1, rst : 1 ],
 	out : [ Q : 8 ]
+}
+
+bus vin {
+	generic : [ width : natural(8) ],
+	in : [ clk : 1, rst : 1, D : 8 -> "00000000" ]
 }

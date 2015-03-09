@@ -38,8 +38,8 @@ def p_statement(p) :
 	p[0] = p[1]
 
 def p_bus(p) :
-	'''bus : BUS'''
-	p[0] = p[1]
+	'''bus : BUS ID LBRACE ports_list RBRACE'''
+	p[0] = ( 'bus',(p[2],p[4]) )
 	
 def p_entity(p):
 	'''entity : ENTITY ID LBRACE ports_list RBRACE'''
@@ -84,7 +84,7 @@ def p_state(p) :
 	
 def p_std_logic(p) :
 	'''std_logic : INTEGER
-	             | INTEGER ARROW STDLOGIC'''
+	             | INTEGER ARROW STRING'''
 	width = 0
 	p[0] = {}
 	if p[1]:
@@ -93,8 +93,8 @@ def p_std_logic(p) :
 		p[0] = { 'type':'std_logic' }
 	elif width > 1:
 		p[0] = { 'type':'std_logic_vector', 'width':width }
-	elif len(p) == 4:
-		p[0]['init'] = p[4]	
+	if len(p) == 4:
+		p[0]['init'] = p[3]	
 		
 
 def p_natural(p) :

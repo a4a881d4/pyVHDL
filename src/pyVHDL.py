@@ -9,6 +9,6 @@ import vhdlparse
 
 if len(sys.argv) == 2:
 	data = open(sys.argv[1]).read()
-	prog = vhdlparse.parse(data,debug=False)
+	prog = vhdlparse.parse(data,debug=True)
 	print prog
 	

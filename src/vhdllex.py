@@ -15,7 +15,7 @@ keywords = (
 )
 
 tokens = keywords + (
-    'ID','INTEGER','STRING','STDLOGIC',
+    'ID','INTEGER','STRING',
     # Structure dereference (->)
     'ARROW',
 
@@ -51,7 +51,6 @@ def t_ID(t):
 
 t_INTEGER = r'\d+'
 t_STRING  = r'\".*?\"'
-t_STDLOGIC  = r'\"[01]?\"'
 t_ARROW   = r'->'
 
 # ?
