@@ -1,12 +1,21 @@
-# An implementation of Dartmouth BASIC (1964)
-
 from ply import *
+
+import logging
+logging.basicConfig(
+    level = logging.DEBUG,
+    filename = "lexlog.txt",
+    filemode = "w",
+    format = "%(filename)10s:%(lineno)4d:%(message)s"
+)
+
+log = logging.getLogger()
 
 keywords = (
     'ENTITY','COMPONENT','GENERIC','IN','OUT','NATURAL',
 )
 
 tokens = keywords + (
+    'ID','INTEGER','STRING','STDLOGIC',
     # Structure dereference (->)
     'ARROW',
 
@@ -21,19 +30,26 @@ tokens = keywords + (
 
 )
 
-t_ignore = ' \t'
+t_ignore = ' \t\x0c'
+t_ignore_COMMENT = '\#.*'
 
 def t_NEWLINE(t):
-    r'\n+'
-    t.lexer.lineno += t.value.count("\n")
-	
+	r'\n+'
+	t.lexer.lineno += t.value.count("\n")
+
+def t_comment(t):
+	r'\#.*'
+
+keywords_map = { }
+for r in keywords:
+	keywords_map[r.lower()] = r
+
 def t_ID(t):
-    r'[A-Za-z][A-Za-z0-9]*'
-    if t.value in keywords:
-        t.type = t.value
-    return t
-    
-t_INTEGER = r'\d+'    
+	r'[A-Za-z_][\w_]*'
+	t.type = keywords_map.get(t.value,"ID")
+	return t
+
+t_INTEGER = r'\d+'
 t_STRING  = r'\".*?\"'
 t_STDLOGIC  = r'\"[01]?\"'
 t_ARROW   = r'->'
@@ -53,32 +69,15 @@ t_PERIOD           = r'\.'
 t_SEMI             = r';'
 t_COLON            = r':'
 
-def t_NEWLINE(t):
-    r'\n'
-    t.lexer.lineno += 1
-    return t
-
 def t_error(t):
-    print("Illegal character %s" % t.value[0])
+    print("Illegal character %s" % repr(t.value[0]))
+    print t.type,t.lexer.lineno
     t.lexer.skip(1)
 
-lexer = lex.lex(optimize=1)
+lexer = lex.lex(debug=True,debuglog=log)
+
 if __name__ == "__main__":
     lex.runmain(lexer)
-
-
-
-
-
-
-
-       
-   
-  
-            
-
-
-
 
 
 
