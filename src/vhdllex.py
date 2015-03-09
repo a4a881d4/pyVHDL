@@ -11,7 +11,7 @@ logging.basicConfig(
 log = logging.getLogger()
 
 keywords = (
-    'ENTITY','COMPONENT','GENERIC','IN','OUT','NATURAL',
+    'ENTITY','COMPONENT','GENERIC','IN','OUT','NATURAL','BUS',
 )
 
 tokens = keywords + (
@@ -31,7 +31,7 @@ tokens = keywords + (
 )
 
 t_ignore = ' \t\x0c'
-t_ignore_COMMENT = '\#.*'
+t_ignore_comment = '\#.*'
 
 def t_NEWLINE(t):
 	r'\n+'
@@ -74,7 +74,7 @@ def t_error(t):
     print t.type,t.lexer.lineno
     t.lexer.skip(1)
 
-lexer = lex.lex(debug=True,debuglog=log)
+lexer = lex.lex(debug=False)
 
 if __name__ == "__main__":
     lex.runmain(lexer)

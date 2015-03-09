@@ -4,15 +4,46 @@ import vhdllex
 tokens = vhdllex.tokens
 
 def p_vhdl(p) :
-	'''vhdl : entity'''
+	'''vhdl : vhdl statement
+	        | statement'''
+	if len(p) == 2 and p[1]:
+		p[0] = { }
+		line,stat = p[1]
+		p[0][line] = stat
+	elif len(p) ==3:
+		p[0] = p[1]
+		if not p[0]: p[0] = { }
+		if p[2]:
+			line,stat = p[2]
+			p[0][line] = stat
+
+def p_statement(p) :
+	'''statement : entity
+	             | bus'''
+	p[0] = p[1]
+
+def p_bus(p) :
+	'''bus : BUS'''
+	p[0] = p[1]
 	
 def p_entity(p):
 	'''entity : ENTITY ID LBRACE ports_list RBRACE'''
+	p[0] = ( 'entity',(p[2],p[4]) )
 	
 def p_ports_list(p):
 	'''ports_list : ports
-				  | ports COMMA ports_list'''
-	
+	              | ports COMMA ports_list'''
+	if len(p) == 2 and p[1]:
+		p[0] = { }
+		line,stat = p[1]
+		p[0][line] = stat
+	elif len(p) ==3:
+		p[0] = p[2]
+		if not p[0]: p[0] = { }
+		if p[1]:
+			line,stat = p[1]
+			p[0][line] = stat
+				
 def p_ports(p) :
 	'''ports : generic
 			 | in
@@ -47,7 +78,7 @@ def p_natural(p) :
 			   | NATURAL LPAREN INTEGER RPAREN'''
 
 def p_error(p):
-	print "error :", repr(p[0])
+	print "error :"
 	
 bparser = yacc.yacc(debug=True,debuglog=vhdllex.log)
 

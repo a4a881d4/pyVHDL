@@ -1,6 +1,6 @@
 # entity add
 entity add {
-generic : [ width : 8 ],
-in : [ clk : 1, rst : 1, D : 8 ],
-out : [ Q : 8 ]
+	generic : [ width : natural(8) ],
+	in : [ clk : 1, rst : 1, D : 8 ],
+	out : [ Q : 8 ]
 }
