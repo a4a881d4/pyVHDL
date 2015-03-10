@@ -10,6 +10,7 @@ from ply import lex
 reserved = {
 	#'architecture' : 'ARCHITECTURE',
 	'component'	: 'COMPONENT',
+	'generic'	: 'GENERIC',
 	'entity'	: 'ENTITY',
 	'end'		: 'END',
 	'generate'  : 'GENERATE',
@@ -40,6 +41,8 @@ signalTypes = [
 	'std_ulogic_vector',
 	'STD_LOGIC',
 	'STD_LOGIC_VECTOR',
+	'integer',
+	'natural'
 	]
 
 # Token defenitions
@@ -96,10 +99,23 @@ def t_IDENTIFIER(t):
 
 # Skip over any undefined tokens, we don't need them
 def t_error(t):
-	t.lexer.skip(1)
+    print("Illegal character %s" % repr(t.value[0]))
+    print t.type,t.lexer.lineno
+    t.lexer.skip(1)
+
+
+import logging
+logging.basicConfig(
+    level = logging.DEBUG,
+    filename = "lexlog.txt",
+    filemode = "w",
+    format = "%(filename)10s:%(lineno)4d:%(message)s"
+)
+
+log = logging.getLogger()
 	
 #Build the lexer
-lex.lex()
+lex.lex(debug=True,debuglog=log)
 
 #***** PARSER *****
 import ply.yacc as yacc
@@ -166,11 +182,12 @@ def p_component(p):
 # entity : ENTITY IDENTIFIER IS portDef END IDENTIFIER ;
 def p_entity(p):
 	'''entity : ENTITY IDENTIFIER IS portDef END IDENTIFIER SCOLON
+			  | ENTITY IDENTIFIER IS genericDef portDef END IDENTIFIER SCOLON		
 			  | ENTITY IDENTIFIER IS END IDENTIFIER SCOLON'''		
 	ident = p[2]
 	inSignals = []
 	outSignals = []
-
+	print 'entity',len(p)
 	# Entity does not contain a portDef
 	if len(p) == 7:
 		p[0] = vhdl.component(ident)
@@ -189,6 +206,11 @@ def p_entity(p):
 	#Note: an entity is identical to a component, however, its signals has global context
 	p[0] = vhdl.component(ident, inSignals, outSignals)
 	
+# genericDef : GENERIC ( genericDeclarationList );
+def p_genericDef(p):
+	'genericDef : GENERIC LPAREN genericDeclarationList RPAREN SCOLON'
+	p[0] = p[3]
+
 # portDef : PORT ( signalDeclarationList );
 def p_portDef(p):
 	'portDef : PORT LPAREN signalDeclarationList RPAREN SCOLON'
@@ -247,6 +269,21 @@ def p_signalDeclarationList(p):
 	
 	# Push the signals up the tree
 	p[0] = signals
+
+def p_genericDeclarationList(p):
+	'''genericDeclarationList : identifierList COLON signalType SCOLON genericDeclarationList
+							  | identifierList COLON signalType'''
+	generics = []
+	for ident in p[1]:
+		generics.append(vhdl.signal(ident))
+	# If there are any, combine with the other signals
+	if len(p) == 6:
+		for sig in p[5]:
+			generics.append(sig)
+	
+	# Push the signals up the tree
+	p[0] = generics
+
 	
 # signalDirection : in
 #				  | out
@@ -351,6 +388,7 @@ def p_range(p):
 # Error rule, skips all invalid tokens
 def p_error(p):
 	#Record the line number the error is on
+	print "error yacc",p.lineno,p.type,p.value,p.lexpos
 	errLineNo = p.lineno
 	tok = yacc.token() # get the next token
 	while tok != None:
@@ -359,9 +397,10 @@ def p_error(p):
 			return tok
 		else:
 			tok = yacc.token()
-	
+
+
 # Build the parser
-yacc.yacc()
+yacc.yacc(debug=True,debuglog=log)
 	
 #*****MAIN*****#
 
@@ -491,22 +530,26 @@ for results in parsedData:
 	signalDefinitions = []
 	signalAssignments = []
 	portMaps = []
-
+	
+	print results
 	# Fill the data structures
 	for statement in r:
 		# Components
 		if isinstance(statement, vhdl.component):
 			componentTemplates.append(statement)
+			statement.out()
 		# Signal definitions
 		elif isinstance(statement, vhdl.signal):
 			signalDefinitions.append(statement)
+			statement.out()
 		# Signal assignments
 		elif isinstance(statement, vhdl.signalAssignment):
 			signalAssignments.append(statement)
+			statement.out()
 		# Port maps
 		elif isinstance(statement, vhdl.portMap):
 			portMaps.append(statement)
-	
+			statement.out()
 	
 	renderer = vhdl.dotRenderer()
 	if rootEntity:

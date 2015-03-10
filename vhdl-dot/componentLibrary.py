@@ -198,7 +198,6 @@ class component:
 		self.identifier = arg_identifier
 		self.inSignals = arg_inSignals
 		self.outSignals = arg_outSignals
-		
 	def out(self):
 		print self.identifier
 		
@@ -209,6 +208,8 @@ class signal:
 		self.type = arg_type
 		self.leftLinks = arg_leftLinks
 		self.rightLinsk = arg_rightLinks
+	def out(self):
+		print self.identifier,"(",arg_type,arg_leftLinks,arg_rightLinks,")"
 		
 class signalAssignment:
 
@@ -216,6 +217,8 @@ class signalAssignment:
 		self.left = arg_LHS
 		self.right = arg_RHS
 		self.direction = arg_Dir
+	def out(self):
+		print self.left,"-",self.direction,"-",self.right
 		
 class portMap:
 	
@@ -223,4 +226,6 @@ class portMap:
 		self.identifier = arg_identifier
 		self.componentName = arg_componentName
 		self.signalAssignments = arg_signalAssignments
+	def out(self):
+		print self.identifier,"-",self.componentName,"-",self.signalAssignments
 		

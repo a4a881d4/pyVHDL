@@ -10,14 +10,13 @@ use ieee.std_logic_unsigned.all;
 entity ADDC is
 	generic (
 		width : integer
-	);
-	port(
-		opa:		in std_logic_vector(width-1 downto 0);
-		opb:		in std_logic_vector(width-1 downto 0);
-		ci:		in std_logic;
-		sum:	out	std_logic_vector(width-1 downto 0);
-		co:		out std_logic
-		);
+	); 
+	port (
+		opa: in std_logic_vector( width-1 downto 0 );
+		opb: in std_logic_vector( width-1 downto 0);
+		ci: in std_logic;
+		sum: out std_logic_vector( width-1 downto 0);
+		co:	out std_logic );
 end ADDC;
 
 architecture behavior of ADDC is

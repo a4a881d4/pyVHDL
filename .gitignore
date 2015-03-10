@@ -60,3 +60,4 @@ parsetab.py
 
 *.vhd.xml
 *.optim.xml
+*.dot
