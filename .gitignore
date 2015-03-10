@@ -57,3 +57,6 @@ target/
 lexlog.txt
 lextab.py
 parsetab.py
+
+*.vhd.xml
+*.optim.xml
