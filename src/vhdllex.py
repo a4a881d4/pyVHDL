@@ -11,7 +11,7 @@ logging.basicConfig(
 log = logging.getLogger()
 
 keywords = (
-    'ENTITY','COMPONENT','GENERIC','SLAVE','MASTER','NATURAL','BUS','INTERFACE',
+    'ENTITY','COMPONENT','GENERIC','SLAVE','MASTER','NATURAL','BUS','ARCH'
 )
 
 tokens = keywords + (

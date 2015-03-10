@@ -34,6 +34,7 @@ def p_vhdl(p) :
 	
 def p_statement(p) :
 	'''statement : entity
+	             | arch
 	             | bus'''
 	p[0] = p[1]
 
@@ -44,19 +45,22 @@ def p_bus(p) :
 def p_entity(p):
 	'''entity : ENTITY ID LBRACE ports_list RBRACE'''
 	p[0] = ( 'entity',(p[2],p[4]) )
+
+def p_arch(p):
+	'''arch : ARCH ID LBRACE arch_struct RBRACE'''
+	p[0] = ( 'arch',(p[2],p[4]) )
 	
 def p_ports_list(p):
 	'''ports_list : ports
 	              | ports COMMA ports_list'''
 	p[0] = itemATlistHead(p)
-				
+
 def p_ports(p) :
 	'''ports : generic
 	         | slave
-	         | master
-			 | interface'''
+	         | master'''
 	p[0] = p[1]
-		
+
 def p_generic(p) :
 	'''generic : GENERIC COLON LBRACKET port_list RBRACKET'''
 	p[0] = ( 'generic', p[4] )
@@ -81,7 +85,7 @@ def p_port(p) :
 def p_state(p) :
 	'''state : std_logic
 	         | natural
-			 | bus_state'''
+	         | bus_statement'''
 	p[0] = p[1]
 	
 def p_std_logic(p) :
@@ -106,15 +110,15 @@ def p_natural(p) :
 	if len(p) == 5:
 		p[0]['init'] = int(p[3])
 		
-def p_bus_state(p) :
-	'''bus_state : BUS LPAREN ID RPAREN'''
+def p_bus_statement(p) :
+	'''bus_statement : BUS LPAREN ID RPAREN'''
 	p[0] = { 'type':'bus' }
 	p[0]['id'] = p[3]
 	
 def p_error(p):
 	print "error :"
 	
-bparser = yacc.yacc(debug=True,debuglog=vhdllex.log)
+bparser = yacc.yacc(debug=True)
 
 def parse(data,debug=0):
 	bparser.error = 0

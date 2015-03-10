@@ -1,0 +1,1312 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio - FREE Community Edition 7.0.5.906 (http://www.liquid-technologies.com)-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:annotation>
+    <xs:documentation>
+    Schema for VHDL, version 1.0 (15/01/2009)
+    Copyright (C) 2009 Zdenek Rehak, rehak.zdenek@gmail.com
+    Masaryk University, Brno, Czech Republic
+    
+    SOURCES:
+    - VHDL Quick Reference Card (Revision 2.2):
+      Web: www.qualis.com
+    - 1076 IEEE Standard VHDL Language Reference Manual:
+      IEEE Computer Society, Sponsored by the Design Automation Standards Committee
+  </xs:documentation>
+  </xs:annotation>
+  <xs:attribute name="line" type="xs:positiveInteger" />
+  <xs:simpleType name="identifier">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_]*" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="literal">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(\d+\#[0-9a-fA-F]+\#|\d+(\.\d+)?|[BOX]?\'[^ \']*\'|[BOX]\&quot;([^\\\n]|(\\.))*?\&quot;)" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="cliteral">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\&quot;([^\\\n]|(\\.))*?\&quot;" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="identifierDot">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-zA-Z][a-zA-Z0-9_.]*" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="logicalOp">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="and" />
+      <xs:enumeration value="or" />
+      <xs:enumeration value="xor" />
+      <xs:enumeration value="nand" />
+      <xs:enumeration value="nor" />
+      <xs:enumeration value="xnor" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="relationalOp">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="=" />
+      <xs:enumeration value="/=" />
+      <xs:enumeration value="&lt;" />
+      <xs:enumeration value="&lt;=" />
+      <xs:enumeration value="&gt;" />
+      <xs:enumeration value="&gt;=" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="shiftOp">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="sll" />
+      <xs:enumeration value="srl" />
+      <xs:enumeration value="sla" />
+      <xs:enumeration value="sra" />
+      <xs:enumeration value="rol" />
+      <xs:enumeration value="ror" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="addingOp">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="+" />
+      <xs:enumeration value="-" />
+      <xs:enumeration value="&amp;" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="multiplyingOp">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="*" />
+      <xs:enumeration value="/" />
+      <xs:enumeration value="mod" />
+      <xs:enumeration value="rem" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="exponentialOp">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="**" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="prefixOp">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="+" />
+      <xs:enumeration value="-" />
+      <xs:enumeration value="abs" />
+      <xs:enumeration value="not" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="timeValues">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="hr" />
+      <xs:enumeration value="min" />
+      <xs:enumeration value="sec" />
+      <xs:enumeration value="ms" />
+      <xs:enumeration value="us" />
+      <xs:enumeration value="ns" />
+      <xs:enumeration value="ps" />
+      <xs:enumeration value="fs" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="nonNegativeNumber">
+    <xs:restriction base="xs:float">
+      <xs:minInclusive value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ioPortValues">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="in" />
+      <xs:enumeration value="out" />
+      <xs:enumeration value="inout" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ioFileValues">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="in" />
+      <xs:enumeration value="out" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="modeFileValues">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="read_mode" />
+      <xs:enumeration value="write_mode" />
+      <xs:enumeration value="append_mode" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="rangeDirections">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="to" />
+      <xs:enumeration value="downto" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="classDeclaration">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="entity" />
+      <xs:enumeration value="architecture" />
+      <xs:enumeration value="configuration" />
+      <xs:enumeration value="procedure" />
+      <xs:enumeration value="function" />
+      <xs:enumeration value="package" />
+      <xs:enumeration value="type" />
+      <xs:enumeration value="subtype" />
+      <xs:enumeration value="constant" />
+      <xs:enumeration value="signal" />
+      <xs:enumeration value="variable" />
+      <xs:enumeration value="component" />
+      <xs:enumeration value="label" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="whichValues">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-zA-Z_][a-zA-Z0-9_]*" />
+      <xs:pattern value="others" />
+      <xs:pattern value="all" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="delayValues">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="transport" />
+      <xs:enumeration value="inertial" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="severityValues">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="note" />
+      <xs:enumeration value="warning" />
+      <xs:enumeration value="error" />
+      <xs:enumeration value="failure" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="optimalVHDL">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element maxOccurs="unbounded" ref="useClause" />
+        <xs:element ref="entity" />
+        <xs:element ref="architecture" />
+        <xs:element ref="package" />
+        <xs:element ref="packageBody" />
+        <xs:element ref="configuration" />
+      </xs:choice>
+      <xs:attribute name="file" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="expression">
+    <xs:choice>
+      <xs:element ref="logicalExpression" />
+      <xs:element ref="relationalExpression" />
+      <xs:element ref="shiftExpression" />
+      <xs:element ref="addingExpression" />
+      <xs:element ref="multiplyingExpression" />
+      <xs:element ref="exponentialExpression" />
+      <xs:element ref="prefixExpression" />
+      <xs:element ref="constantExpression" />
+      <xs:element ref="newExpression" />
+      <xs:element ref="timeExpression" />
+      <xs:element ref="objectExpression" />
+      <xs:element ref="recordExpression" />
+      <xs:element ref="aggregateExpression" />
+    </xs:choice>
+  </xs:group>
+  <xs:element name="logicalExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute name="op" type="logicalOp" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="relationalExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute name="op" type="relationalOp" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="shiftExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute name="op" type="shiftOp" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addingExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute name="op" type="addingOp" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="multiplyingExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute name="op" type="multiplyingOp" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="exponentialExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute name="op" type="exponentialOp" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="prefixExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute name="op" type="prefixOp" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="constantExpression">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:string" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="newExpression">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element ref="attribute" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="attribute">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="timeExpression">
+    <xs:complexType>
+      <xs:attribute name="value" type="nonNegativeNumber" use="required" />
+      <xs:attribute name="id" type="timeValues" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="objectExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element ref="range" />
+          <xs:element ref="parameters" />
+        </xs:choice>
+        <xs:element minOccurs="0" ref="attribute" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="recordExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="objectExpression" />
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="objectExpression" />
+          <xs:element ref="suffix" />
+        </xs:choice>
+        <xs:element minOccurs="0" ref="attribute" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="aggregateExpression">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:group ref="expression" />
+        <xs:element ref="connect" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="connect">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="choices" />
+          <xs:element ref="id" />
+        </xs:choice>
+        <xs:group ref="expression" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="choices">
+    <xs:complexType>
+      <xs:group maxOccurs="unbounded" ref="choice" />
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="choice">
+    <xs:choice>
+      <xs:group ref="expression" />
+      <xs:element ref="range" />
+      <xs:element ref="others" />
+    </xs:choice>
+  </xs:group>
+  <xs:element name="others" />
+  <xs:element name="suffix">
+    <xs:complexType>
+      <xs:attribute name="id" type="cliteral" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="parameters">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:group ref="expression" />
+        <xs:element ref="connect" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="rangeParameters">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="range" />
+        <xs:element ref="parameters" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="useClause">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="use" />
+      </xs:sequence>
+      <xs:attribute name="library" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="use">
+    <xs:complexType>
+      <xs:attribute name="id" type="identifierDot" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="entity">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="generic" />
+        <xs:element minOccurs="0" ref="ports" />
+        <xs:element minOccurs="0" ref="declarations" />
+        <xs:element minOccurs="0" ref="parallelStatements" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="generic">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="parameter" />
+        <xs:sequence minOccurs="0">
+          <xs:element ref="genericMap" />
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="genericMap">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="map" />
+        <xs:group ref="expression" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="portMap">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="map" />
+        <xs:group ref="expression" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="map">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="objectExpression" />
+          <xs:element ref="recordExpression" />
+        </xs:choice>
+        <xs:choice>
+          <xs:group ref="expression" />
+          <xs:element ref="open" />
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="open" />
+  <xs:element name="parameter">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element minOccurs="0" ref="value" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="type">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="range" />
+        <xs:element ref="parameters" />
+      </xs:choice>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="value">
+    <xs:complexType>
+      <xs:group ref="expression" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ports">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="port" />
+        <xs:sequence minOccurs="0">
+          <xs:element ref="portMap" />
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="port">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element minOccurs="0" ref="value" />
+      </xs:sequence>
+      <xs:attribute name="io" type="ioPortValues" use="required" />
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="target">
+    <xs:choice>
+      <xs:element ref="objectExpression" />
+      <xs:element ref="recordExpression" />
+      <xs:element ref="aggregateExpression" />
+    </xs:choice>
+  </xs:group>
+  <xs:element name="declarations">
+    <xs:complexType>
+      <xs:group maxOccurs="unbounded" ref="declaration" />
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="declaration">
+    <xs:choice>
+      <xs:element ref="typeDeclaration" />
+      <xs:element ref="subtypeDeclaration" />
+      <xs:element ref="constantDeclaration" />
+      <xs:element ref="variableDeclaration" />
+      <xs:element ref="signalDeclaration" />
+      <xs:element ref="fileDeclaration" />
+      <xs:element ref="aliasDeclaration" />
+      <xs:element ref="attributeDeclaration" />
+      <xs:element ref="componentDeclaration" />
+      <xs:element ref="functionDeclaration" />
+      <xs:element ref="procedureDeclaration" />
+      <xs:element ref="forDeclaration" />
+    </xs:choice>
+  </xs:group>
+  <xs:element name="typeDeclaration">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="ids" />
+        <xs:element ref="range" />
+        <xs:element ref="array" />
+        <xs:element ref="records" />
+        <xs:element ref="access" />
+        <xs:element ref="fileOf" />
+      </xs:choice>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="subtypeDeclaration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="id" />
+        <xs:choice>
+          <xs:element ref="type" />
+          <xs:element ref="range" />
+          <xs:element ref="ranges" />
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="constantDeclaration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element ref="value" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="variableDeclaration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element minOccurs="0" ref="value" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="shared" type="xs:boolean" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="signalDeclaration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element minOccurs="0" ref="value" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fileDeclaration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="io" type="ioFileValues" />
+      <xs:attribute name="mode" type="modeFileValues" />
+      <xs:attribute name="name" type="cliteral" use="optional" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="aliasDeclaration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element ref="objectExpression" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="attributeDeclaration">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="type" />
+        <xs:group ref="expression" />
+      </xs:choice>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="class" type="classDeclaration" />
+      <xs:attribute name="of" type="whichValues" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="componentDeclaration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="generic" />
+        <xs:element minOccurs="0" ref="ports" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="functionDeclaration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="functionParameters" />
+        <xs:element ref="type" />
+        <xs:element minOccurs="0" ref="declarations" />
+        <xs:element ref="sequentialStatements" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="pure" type="xs:boolean" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="procedureDeclaration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="procedureParameters" />
+        <xs:element minOccurs="0" ref="declarations" />
+        <xs:element minOccurs="0" ref="sequentialStatements" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="forDeclaration">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element minOccurs="0" ref="genericMap" />
+        <xs:element ref="portMap" />
+      </xs:sequence>
+      <xs:attribute name="which" type="whichValues" use="required" />
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="entity" type="identifierDot" use="optional" />
+      <xs:attribute name="architecture" type="identifier" use="optional" />
+      <xs:attribute name="configuration" type="identifierDot" use="optional" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ids">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element ref="id" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="id">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="range" />
+        <xs:element ref="parameters" />
+      </xs:choice>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="range">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:group ref="expression" />
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute name="direction" type="rangeDirections" use="optional" />
+      <xs:attribute name="id" type="identifier" use="optional" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="array">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="rangesTypes" />
+        <xs:group ref="expression" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="rangesTypes">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="range" />
+        <xs:element ref="type" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="records">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element ref="record" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="record">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ids" />
+        <xs:element ref="type" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="access">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fileOf">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ranges">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element ref="range" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="declarationParameter">
+    <xs:choice>
+      <xs:element ref="constantParameter" />
+      <xs:element ref="variableParameter" />
+      <xs:element ref="signalParameter" />
+      <xs:element ref="idParameter" />
+    </xs:choice>
+  </xs:group>
+  <xs:element name="functionParameters">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:group ref="declarationParameter" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="procedureParameters">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:group ref="declarationParameter" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="constantParameter">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element minOccurs="0" ref="value" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="io" type="ioPortValues" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="variableParameter">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element minOccurs="0" ref="value" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="io" type="ioPortValues" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="signalParameter">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element minOccurs="0" ref="value" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="io" type="ioPortValues" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="idParameter">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="type" />
+        <xs:element minOccurs="0" ref="value" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="io" type="ioPortValues" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sequentialStatements">
+    <xs:complexType>
+      <xs:group maxOccurs="unbounded" ref="sequentialStatement" />
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="sequentialStatement">
+    <xs:choice>
+      <xs:element ref="waitSequentialStatement" />
+      <xs:element ref="assertSequentialStatement" />
+      <xs:element ref="reportSequentialStatement" />
+      <xs:element ref="signalAssignSequentialStatement" />
+      <xs:element ref="variableAssignSequentialStatement" />
+      <xs:element ref="procedureSequentialStatement" />
+      <xs:element ref="ifSequentialStatement" />
+      <xs:element ref="caseSequentialStatement" />
+      <xs:element ref="whileSequentialStatement" />
+      <xs:element ref="forSequentialStatement" />
+      <xs:element ref="nextSequentialStatement" />
+      <xs:element ref="exitSequentialStatement" />
+      <xs:element ref="returnSequentialStatement" />
+      <xs:element ref="nullSequentialStatement" />
+    </xs:choice>
+  </xs:group>
+  <xs:element name="waitSequentialStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="on" />
+        <xs:element minOccurs="0" ref="for" />
+        <xs:element minOccurs="0" ref="until" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="assertSequentialStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="report" type="literal" />
+      <xs:attribute name="severity" type="severityValues" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="reportSequentialStatement">
+    <xs:complexType>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="report" type="literal" use="required" />
+      <xs:attribute name="severity" type="severityValues" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="signalAssignSequentialStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="target" />
+        <xs:element minOccurs="0" ref="reject" />
+        <xs:element ref="signalValue" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="delay" type="delayValues" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="variableAssignSequentialStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="target" />
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="procedureSequentialStatement">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:element ref="range" />
+        <xs:element ref="parameters" />
+      </xs:choice>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="id" type="identifier" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ifSequentialStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:element ref="then" />
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="elseif" />
+        <xs:element minOccurs="0" ref="else" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="label" type="identifier" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="caseSequentialStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:element maxOccurs="unbounded" ref="case" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="label" type="identifier" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="whileSequentialStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:element ref="sequentialStatements" />
+      </xs:sequence>
+      <xs:attribute name="label" type="identifier" use="optional" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="forSequentialStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="range" />
+        <xs:element minOccurs="0" ref="sequentialStatements" />
+      </xs:sequence>
+      <xs:attribute name="label" type="identifier" use="optional" />
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="id" type="identifier" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nextSequentialStatement">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="label" type="identifier" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="exitSequentialStatement">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="label" type="identifier" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="returnSequentialStatement">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nullSequentialStatement">
+    <xs:complexType>
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="on">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ids" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="for">
+    <xs:complexType>
+      <xs:group ref="expression" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="until">
+    <xs:complexType>
+      <xs:group ref="expression" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="case">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="choices" />
+        <xs:element ref="sequentialStatements" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="then">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sequentialStatements" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="elseif">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:element ref="then" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="else">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sequentialStatements" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="parallelStatements">
+    <xs:complexType>
+      <xs:group maxOccurs="unbounded" ref="parallelStatement" />
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="parallelStatement">
+    <xs:choice>
+      <xs:element ref="blockParallelStatement" />
+      <xs:element ref="processParallelStatement" />
+      <xs:element ref="procedureParallelStatement" />
+      <xs:element ref="assignParallelStatement" />
+      <xs:element ref="assertParallelStatement" />
+      <xs:element ref="selectParallelStatement" />
+      <xs:element ref="componentParallelStatement" />
+      <xs:element ref="entityParallelStatement" />
+      <xs:element ref="configurationParallelStatement" />
+      <xs:element ref="ifParallelStatement" />
+      <xs:element ref="forParallelStatement" />
+    </xs:choice>
+  </xs:group>
+  <xs:element name="blockParallelStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="generic" />
+        <xs:element minOccurs="0" ref="ports" />
+        <xs:element minOccurs="0" ref="declarations" />
+        <xs:element minOccurs="0" ref="parallelStatements" />
+      </xs:sequence>
+      <xs:attribute name="label" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="processParallelStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice minOccurs="0">
+          <xs:element ref="range" />
+          <xs:element ref="parameters" />
+        </xs:choice>
+        <xs:element minOccurs="0" ref="declarations" />
+        <xs:element minOccurs="0" ref="sequentialStatements" />
+      </xs:sequence>
+      <xs:attribute name="label" type="identifier" use="optional" />
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="postponed" type="xs:boolean" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="procedureParallelStatement">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="range" />
+        <xs:element ref="parameters" />
+      </xs:choice>
+      <xs:attribute name="label" type="identifier" use="optional" />
+      <xs:attribute name="postponed" type="xs:boolean" use="required" />
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="assignParallelStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="target" />
+        <xs:element minOccurs="0" ref="reject" />
+        <xs:element maxOccurs="unbounded" ref="signalValue" />
+      </xs:sequence>
+      <xs:attribute name="label" type="identifier" />
+      <xs:attribute name="postponed" type="xs:boolean" use="required" />
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="guarded" type="xs:boolean" use="required" />
+      <xs:attribute name="delay" type="delayValues" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="assertParallelStatement">
+    <xs:complexType>
+      <xs:group ref="expression" />
+      <xs:attribute name="label" type="identifier" />
+      <xs:attribute name="postponed" type="xs:boolean" use="required" />
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="report" type="literal" />
+      <xs:attribute name="severity" type="severityValues" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="selectParallelStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:group ref="target" />
+        <xs:element minOccurs="0" ref="reject" />
+        <xs:element maxOccurs="unbounded" ref="signalValue" />
+      </xs:sequence>
+      <xs:attribute name="label" type="identifier" />
+      <xs:attribute name="postponed" type="xs:boolean" use="required" />
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="guarded" type="xs:boolean" use="required" />
+      <xs:attribute name="delay" type="delayValues" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="componentParallelStatement">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element minOccurs="0" ref="genericMap" />
+        <xs:element ref="portMap" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="label" type="identifier" use="required" />
+      <xs:attribute name="id" type="identifier" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="entityParallelStatement">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element minOccurs="0" ref="genericMap" />
+        <xs:element ref="portMap" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="label" type="identifier" use="required" />
+      <xs:attribute name="id" type="identifierDot" use="required" />
+      <xs:attribute name="architecture" type="identifier" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="configurationParallelStatement">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element minOccurs="0" ref="genericMap" />
+        <xs:element ref="portMap" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="label" type="identifier" use="required" />
+      <xs:attribute name="id" type="identifierDot" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ifParallelStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="expression" />
+        <xs:element minOccurs="0" ref="generate" />
+      </xs:sequence>
+      <xs:attribute name="label" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="forParallelStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="range" />
+        <xs:element minOccurs="0" ref="generate" />
+      </xs:sequence>
+      <xs:attribute name="label" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+      <xs:attribute name="id" type="identifier" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="reject">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="timeExpression" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="signalValue">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="expressions" />
+          <xs:element ref="unaffected" />
+        </xs:choice>
+        <xs:element minOccurs="0" ref="when" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="expressions">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:group ref="expression" />
+        <xs:element ref="afterExpression" />
+        <xs:element ref="null" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="null" />
+  <xs:element name="afterExpression">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:group ref="expression" />
+          <xs:element ref="null" />
+        </xs:choice>
+        <xs:group ref="expression" />
+      </xs:sequence>
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="unaffected" />
+  <xs:element name="when">
+    <xs:complexType>
+      <xs:choice>
+        <xs:group ref="expression" />
+        <xs:element ref="choices" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="generate">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="parallelStatements" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="architecture">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="declarations" />
+        <xs:element minOccurs="0" ref="parallelStatements" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="entity" type="xs:string" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="package">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="declarations" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="packageBody">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="declarations" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="configuration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="forArchitecture" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="entity" type="xs:string" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="forArchitecture">
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="configuration" />
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="configuration">
+    <xs:choice>
+      <xs:element ref="blockConfiguration" />
+      <xs:element ref="componentConfiguration" />
+    </xs:choice>
+  </xs:group>
+  <xs:element name="blockConfiguration">
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="configuration" />
+      <xs:attribute name="label" type="xs:string" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="componentConfiguration">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="useEntity" />
+        <xs:element ref="useConfiguration" />
+      </xs:choice>
+      <xs:attribute name="id" type="identifier" use="required" />
+      <xs:attribute name="which" type="whichValues" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="useEntity">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence minOccurs="0">
+          <xs:element minOccurs="0" ref="genericMap" />
+          <xs:element ref="portMap" />
+        </xs:sequence>
+        <xs:element minOccurs="0" ref="forArchitecture" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifierDot" use="required" />
+      <xs:attribute name="architecture" type="identifier" use="optional" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="useConfiguration">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element minOccurs="0" ref="genericMap" />
+        <xs:element ref="portMap" />
+      </xs:sequence>
+      <xs:attribute name="id" type="identifierDot" use="required" />
+      <xs:attribute ref="line" use="required" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

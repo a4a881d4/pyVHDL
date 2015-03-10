@@ -5,6 +5,10 @@ entity add {
 	master : [ Q : 8, A : bus(inout), B : bus(vin) ]
 }
 
+arch add {
+	component : [ A : entity(s) ]
+}
+
 bus inout {
 	generic : [ width : natural(8) ],
 	slave : [ clk : 1, rst : 1, D : 8 ],
